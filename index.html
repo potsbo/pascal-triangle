@@ -1,0 +1,70 @@
+<html>
+<head>
+</head>
+<body>
+<input type="number" id="mod" value ="2" onchange ="Init()">
+<button type ="button"onclick="document.getElementById('mod').value = 2;Init();">初期化(2にする)</button>
+<button type ="button"onclick="document.getElementById('mod').value = parseInt(document.getElementById('mod').value)-1;Init();">-1</button>
+<button type ="button"onclick="document.getElementById('mod').value = parseInt(document.getElementById('mod').value)+1;Init();">+1</button>
+<button type ="button"onclick="document.getElementById('mod').value = parseInt(document.getElementById('mod').value)+5;Init();">+5</button>
+<br>
+<canvas id="canvas" width ="800px" height="800px"></canvas>
+<script>
+modulo=7; //mod
+pascal_size=800; //パスカルの三角形の段の数
+sq_size_x=1; //四角形のサイズ
+sq_size_y=1; //四角形のサイズ
+var canv = document.getElementById("canvas");
+var ctx = canv.getContext('2d');
+var x_position;
+var y_position;
+
+//nCkのリスト
+var column=Array(pascal_size);
+var column2=Array(pascal_size);
+
+Init(); ///追加_橋本
+
+//////追加_橋本///////////
+function Init(){
+//法を変えたとき、初期化すべきものたち
+column.fill(0);
+column2.fill(0);  //一時的なコピー
+column[0]=1;
+x_position=pascal_size*sq_size_x;
+y_position=0;
+
+modulo = document.getElementById('mod').value;  //DOMの値を読む
+ctx.clearRect(0,0,800,800);  //キャンバスを書き換える
+Drawpascal();
+}
+
+//四角形を書く関数
+function Drawsq(x,y){
+	ctx.fillRect(x,y,sq_size_x,sq_size_y);
+} 
+
+
+function Drawpascal(){  ////追加_橋本 描画部分を1つの関数にしておく
+//0段目の描画
+Drawsq(pascal_size*sq_size_x/2,0);
+for(var n=1;n<pascal_size;n++){
+	//n段目を計算,描画
+	y_position=y_position+sq_size_y;
+	x_position=(pascal_size-n)*sq_size_x/2;
+	for (var i=0; i<=n;i++){
+		column2[i]=column[i];
+		}
+	for (var i=0; i<=n;i++){
+		column[i+1]=(column2[i+1]+column2[i])%modulo;
+            //    alert([n,i,column[i]]);
+ 		if(column[i]!=0){
+			Drawsq(x_position,y_position);
+		}
+    		x_position=x_position+sq_size_x;
+	}
+}
+}
+</script> 
+</body>
+</html> 
